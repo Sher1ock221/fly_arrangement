@@ -1,0 +1,54 @@
+{
+  "name": "fly-arrangement-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.flyarrangement.desktop",
+    "productName": "Fly Arrangement",
+    "icon": "build/icon.ico",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend"
+      },
+      {
+        "from": "../frontend",
+        "to": "frontend"
+      },
+      {
+        "from": "../runtime",
+        "to": "runtime"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Fly Arrangement"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+# Copy .env.example to .env and fill the required secrets before starting Compose.
+services:
+  db:
+    image: postgres:15
+    container_name: fly-arrangement-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fly_arrangement}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-fly_arrangement}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-15432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    build: ./backend
+    container_name: fly-arrangement-backend
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER:-fly_arrangement}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-fly_arrangement}"
+      ENVIRONMENT: production
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY in .env}
+      PUBLIC_API_BASE_URL: ${PUBLIC_API_BASE_URL:-http://localhost:18000}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${BACKEND_PORT:-18000}:18000"
+
+  frontend:
+    build: ./frontend
+    container_name: fly-arrangement-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${FRONTEND_PORT:-13000}:3000"
+
+volumes:
+  postgres_data:

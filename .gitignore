@@ -1,0 +1,59 @@
+# Environment secrets and local overrides. Keep the example templates.
+.env*
+!.env.example
+!**/.env.example
+!**/.env.local.example
+
+# JavaScript dependencies and generated output
+node_modules/
+.next/
+out/
+frontend/tsconfig.tsbuildinfo
+desktop/release*/
+desktop/logs/
+desktop/builder-debug.yml
+*.blockmap
+*.exe
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+backend/.venv/
+runtime/backend-venv/
+.pytest_cache/
+.coverage
+
+# Generated portable runtimes
+runtime/python/
+runtime/node/
+
+# Local databases and application data
+/data/
+/desktop/data/
+/desktop-data*/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Logs and temporary command output
+*.log
+*.log.*
+/desktop-data-fix7-cmderr.txt
+
+# Local path/runtime experiments
+/_fix8_space/
+/_light_pkg_space/
+/_spaced_path_test/
+/desktop data fix7 space2/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
